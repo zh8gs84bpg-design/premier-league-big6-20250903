@@ -1,5 +1,6 @@
 // 截至2025年9月3日英国当地时间英超Big6一线队准确数据（仅当前在队球员，无离队/转会标注）
 // 已修正：移除曼城帕尔默、麦卡蒂等离队人员，确保每支球队球员均为当前在队
+let teamSelect, queryBtn, playersTable, playersBody, emptyTip;
 const big6PlayersData = {
     // 曼城：移除帕尔默、麦卡蒂，保留当前在队主力+替补
     manCity: {
@@ -144,6 +145,13 @@ const big6PlayersData = {
         ]
     }
 };
+window.onload = function() {
+    teamSelect = document.getElementById("team-select");
+    queryBtn = document.getElementById("query-btn");
+    playersTable = document.getElementById("players-table");
+    playersBody = document.getElementById("players-body");
+    emptyTip = document.getElementById("empty-tip");
+};
 
 // 交互逻辑（实现MVP查询功能，无修改）
 const teamSelect = document.getElementById("team-select");
@@ -154,34 +162,32 @@ const emptyTip = document.getElementById("empty-tip");
 
 
 
-// 切换球队时重置显示/ 绑定查询按钮点击事件（修复后）
-queryBtn.addEventListener("click", function() {
+// 绑定查询按钮点击事件（最终修正版）
+queryBtn?.addEventListener("click", function() {
     const selectedTeamId = teamSelect.value;
     if (!selectedTeamId) {
         alert("请先从下拉菜单选择一支英超Big6球队！");
         return;
     }
 
+    // 确认数据存在
     const selectedTeam = big6PlayersData[selectedTeamId];
+    if (!selectedTeam || !selectedTeam.players || selectedTeam.players.length === 0) {
+        alert("该球队暂无数据！");
+        return;
+    }
+
     const players = selectedTeam.players;
+    playersBody.innerHTML = ""; // 清空历史数据
 
-    // 清空历史数据
-    playersBody.innerHTML = "";
-
-    // 正确渲染球员表格（确保反引号包裹模板字符串）
+    // 渲染表格（强制使用英文反引号）
     players.forEach(player => {
-        const row = document.createElement("tr");
-        row.innerHTML = `
-            <td>${player.name}</td>
-            <td>${player.position}</td>
-            <td>${player.nationality}</td>
-            <td>${player.height}</td>
-            <td>${player.weight}</td>
-        `;
-        playersBody.appendChild(row);
+        const tr = document.createElement("tr");
+        tr.innerHTML = `<td>${player.name}</td><td>${player.position}</td><td>${player.nationality}</td><td>${player.height}</td><td>${player.weight}</td>`;
+        playersBody.appendChild(tr);
     });
 
-    // 显示表格，隐藏空提示
+    // 显示表格，隐藏提示
     playersTable.style.display = "table";
     emptyTip.style.display = "none";
 });
