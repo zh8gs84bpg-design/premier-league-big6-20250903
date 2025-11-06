@@ -152,7 +152,9 @@ const playersTable = document.getElementById("players-table");
 const playersBody = document.getElementById("players-body");
 const emptyTip = document.getElementById("empty-tip");
 
-// 绑定查询按钮点击事件
+
+
+// 切换球队时重置显示/ 绑定查询按钮点击事件（修复后）
 queryBtn.addEventListener("click", function() {
     const selectedTeamId = teamSelect.value;
     if (!selectedTeamId) {
@@ -166,7 +168,7 @@ queryBtn.addEventListener("click", function() {
     // 清空历史数据
     playersBody.innerHTML = "";
 
-    // 插入当前在队球员数据
+    // 正确渲染球员表格（确保反引号包裹模板字符串）
     players.forEach(player => {
         const row = document.createElement("tr");
         row.innerHTML = `
@@ -183,8 +185,6 @@ queryBtn.addEventListener("click", function() {
     playersTable.style.display = "table";
     emptyTip.style.display = "none";
 });
-
-// 切换球队时重置显示
 teamSelect.addEventListener("change", function() {
     if (!teamSelect.value) {
         playersTable.style.display = "none";
