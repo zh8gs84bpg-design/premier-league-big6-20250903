@@ -3,7 +3,7 @@
 let teamSelect, queryBtn, playersTable, playersBody, emptyTip;
 const big6PlayersData = {
     // 曼城：移除帕尔默、麦卡蒂，保留当前在队主力+替补
-    manCity: {
+    曼城: {
         name: "曼城",
         players: [
             { name: "多纳鲁马", position: "门将", nationality: "意大利", height: 196, weight: 90 },
@@ -27,7 +27,7 @@ const big6PlayersData = {
         ]
     },
     // 阿森纳：当前在队主力+替补
-    arsenal: {
+    阿森纳: {
         name: "阿森纳",
         players: [
             { name: "拉亚", position: "门将", nationality: "西班牙", height: 189, weight: 82 },
@@ -51,7 +51,7 @@ const big6PlayersData = {
         ]
     },
     // 利物浦：当前在队主力+替补
-    liverpool: {
+    利物浦: {
         name: "利物浦",
         players: [
             { name: "阿利森", position: "门将", nationality: "巴西", height: 193, weight: 91 },
@@ -76,7 +76,7 @@ const big6PlayersData = {
         ]
     },
     // 热刺：当前在队主力+替补
-    tottenham: {
+    热刺: {
         name: "热刺",
         players: [
             { name: "维卡里奥", position: "门将", nationality: "意大利", height: 188, weight: 80 },
@@ -99,7 +99,7 @@ const big6PlayersData = {
         ]
     },
     // 切尔西：当前在队主力+替补
-    chelsea: {
+    切尔西: {
         name: "切尔西",
         players: [
             { name: "桑切斯", position: "门将", nationality: "西班牙", height: 191, weight: 85 },
@@ -122,7 +122,7 @@ const big6PlayersData = {
         ]
     },
     // 曼联：当前在队主力+替补
-    manUtd: {
+    曼联: {
         name: "曼联",
         players: [
             { name: "巴因迪尔", position: "门将", nationality: "土耳其", height: 193, weight: 85 },
@@ -162,21 +162,18 @@ const emptyTip = document.getElementById("empty-tip");
 
 
 
-// 绑定查询按钮点击事件（最终修正版）
 queryBtn?.addEventListener("click", function() {
-    const selectedTeamId = teamSelect.value;
-    if (!selectedTeamId) {
-        alert("请先从下拉菜单选择一支英超Big6球队！");
+    // 改为获取下拉框选中的文本（比如“曼城”）
+    const selectedTeamName = teamSelect.options[teamSelect.selectedIndex].text;
+    const selectedTeam = big6PlayersData[selectedTeamName];
+
+    if (!selectedTeam) {
+        alert("未找到该球队数据！");
         return;
     }
 
-    // 确认数据存在
-    const selectedTeam = big6PlayersData[selectedTeamId];
-    if (!selectedTeam || !selectedTeam.players || selectedTeam.players.length === 0) {
-        alert("该球队暂无数据！");
-        return;
-    }
-
+    // 后续渲染表格的逻辑不变
+});
     const players = selectedTeam.players;
     playersBody.innerHTML = ""; // 清空历史数据
 
