@@ -1,9 +1,10 @@
 // 截至2025年9月3日英国当地时间英超Big6一线队准确数据（仅当前在队球员，无离队/转会标注）
 // 已修正：移除曼城帕尔默、麦卡蒂等离队人员，确保每支球队球员均为当前在队
 let teamSelect, queryBtn, playersTable, playersBody, emptyTip;
+
 const big6PlayersData = {
-    // 曼城：移除帕尔默、麦卡蒂，保留当前在队主力+替补
-    曼城: {
+    // 1. 曼城
+    "曼城": {
         name: "曼城",
         players: [
             { name: "多纳鲁马", position: "门将", nationality: "意大利", height: 196, weight: 90 },
@@ -26,8 +27,8 @@ const big6PlayersData = {
             { name: "奥斯卡·鲍伯", position: "前锋", nationality: "挪威", height: 178, weight: 72 }
         ]
     },
-    // 阿森纳：当前在队主力+替补
-    阿森纳: {
+    // 2. 阿森纳
+    "阿森纳": {
         name: "阿森纳",
         players: [
             { name: "拉亚", position: "门将", nationality: "西班牙", height: 189, weight: 82 },
@@ -50,8 +51,8 @@ const big6PlayersData = {
             { name: "弗洛里安·维尔茨", position: "前锋", nationality: "德国", height: 176, weight: 68 }
         ]
     },
-    // 利物浦：当前在队主力+替补
-    利物浦: {
+    // 3. 利物浦
+    "利物浦": {
         name: "利物浦",
         players: [
             { name: "阿利森", position: "门将", nationality: "巴西", height: 193, weight: 91 },
@@ -75,8 +76,8 @@ const big6PlayersData = {
             { name: "法比奥·卡瓦略", position: "前锋", nationality: "葡萄牙", height: 173, weight: 68 }
         ]
     },
-    // 热刺：当前在队主力+替补
-    热刺: {
+    // 4. 热刺
+    "热刺": {
         name: "热刺",
         players: [
             { name: "维卡里奥", position: "门将", nationality: "意大利", height: 188, weight: 80 },
@@ -98,8 +99,8 @@ const big6PlayersData = {
             { name: "布伦南·约翰逊", position: "左边锋", nationality: "威尔士", height: 175, weight: 70 }
         ]
     },
-    // 切尔西：当前在队主力+替补
-    切尔西: {
+    // 5. 切尔西
+    "切尔西": {
         name: "切尔西",
         players: [
             { name: "桑切斯", position: "门将", nationality: "西班牙", height: 191, weight: 85 },
@@ -121,8 +122,8 @@ const big6PlayersData = {
             { name: "埃斯特旺·威廉", position: "右边锋", nationality: "巴西", height: 172, weight: 65 }
         ]
     },
-    // 曼联：当前在队主力+替补
-    曼联: {
+    // 6. 曼联
+    "曼联": {
         name: "曼联",
         players: [
             { name: "巴因迪尔", position: "门将", nationality: "土耳其", height: 193, weight: 85 },
@@ -145,53 +146,56 @@ const big6PlayersData = {
         ]
     }
 };
+
+// 页面加载完成后初始化元素+绑定事件（核心修正）
 window.onload = function() {
+    // 初始化页面元素
     teamSelect = document.getElementById("team-select");
     queryBtn = document.getElementById("query-btn");
     playersTable = document.getElementById("players-table");
     playersBody = document.getElementById("players-body");
     emptyTip = document.getElementById("empty-tip");
-};
 
-// 交互逻辑（实现MVP查询功能，无修改）
-const teamSelect = document.getElementById("team-select");
-const queryBtn = document.getElementById("query-btn");
-const playersTable = document.getElementById("players-table");
-const playersBody = document.getElementById("players-body");
-const emptyTip = document.getElementById("empty-tip");
+    // 绑定查询按钮点击事件
+    queryBtn.addEventListener("click", function() {
+        // 获取下拉框选中的球队名称（文字）
+        const selectedTeamName = teamSelect.options[teamSelect.selectedIndex].text;
+        // 匹配对应球队数据
+        const selectedTeam = big6PlayersData[selectedTeamName];
 
+        // 验证数据是否存在
+        if (!selectedTeam) {
+            alert("未找到该球队数据，请确认选择的是英超Big6球队！");
+            return;
+        }
 
+        const players = selectedTeam.players;
+        // 清空历史表格数据
+        playersBody.innerHTML = "";
 
-queryBtn?.addEventListener("click", function() {
-    // 改为获取下拉框选中的文本（比如“曼城”）
-    const selectedTeamName = teamSelect.options[teamSelect.selectedIndex].text;
-    const selectedTeam = big6PlayersData[selectedTeamName];
+        // 渲染球员数据到表格
+        players.forEach(player => {
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+                <td>${player.name}</td>
+                <td>${player.position}</td>
+                <td>${player.nationality}</td>
+                <td>${player.height}</td>
+                <td>${player.weight}</td>
+            `;
+            playersBody.appendChild(tr);
+        });
 
-    if (!selectedTeam) {
-        alert("未找到该球队数据！");
-        return;
-    }
-
-    // 后续渲染表格的逻辑不变
-});
-    const players = selectedTeam.players;
-    playersBody.innerHTML = ""; // 清空历史数据
-
-    // 渲染表格（强制使用英文反引号）
-    players.forEach(player => {
-        const tr = document.createElement("tr");
-        tr.innerHTML = `<td>${player.name}</td><td>${player.position}</td><td>${player.nationality}</td><td>${player.height}</td><td>${player.weight}</td>`;
-        playersBody.appendChild(tr);
+        // 显示表格，隐藏空提示
+        playersTable.style.display = "table";
+        emptyTip.style.display = "none";
     });
 
-    // 显示表格，隐藏提示
-    playersTable.style.display = "table";
-    emptyTip.style.display = "none";
-});
-teamSelect.addEventListener("change", function() {
-    if (!teamSelect.value) {
-        playersTable.style.display = "none";
-        emptyTip.style.display = "block";
-    }
-});
-```
+    // 绑定下拉框变化事件
+    teamSelect.addEventListener("change", function() {
+        if (!teamSelect.value) {
+            playersTable.style.display = "none";
+            emptyTip.style.display = "block";
+        }
+    });
+};
